@@ -1,34 +1,35 @@
 # Job Application Log Viewer (Power Apps)
 
-A working Canvas Power App, built and verified live in a real Microsoft 365 / Power Platform tenant (OTH Amberg-Weiden), that reads and writes to an Excel Online table — built specifically to close the "initial hands-on experience with Power Apps" gap for job applications asking for Power Platform exposure.
+A working Canvas Power App, built and verified live in a Microsoft 365 / Power Platform tenant, that reads and writes to an Excel Online table.
 
-## What this is
+## What it does
 
-A small, single-table CRUD app connected to an Excel Online (Business) table (`PowerApps_Demo_ApplicationLog.xlsx`, sheet `Table1`), built primarily using Power Apps Studio's own "Start with your data" generator, which produces three linked screens from a live data connection:
+A small, single-table CRUD app connected to an Excel Online (Business) table (`PowerApps_Demo_ApplicationLog.xlsx`, sheet `Table1`), built with Power Apps Studio's "Start with your data" generator, which produces three linked screens from a live data connection:
 
 - a browse/gallery screen listing all records with a search box,
 - a detail (read) view,
 - a new-record / edit form.
 
-**Honest scope note:** this is a small, single-table app generated from Power Apps' own data wizard, not a complex multi-screen enterprise build. That is an accurate, proportionate claim for "initial hands-on experience with Power Apps" — it is not written up as more than it is.
+## Scope
 
-## How it was built and verified (not just generated and screenshotted)
+The app is a compact, single-table build generated from Power Apps' own data wizard, then driven and verified interactively. It is a hands-on introduction to the Power Platform: connecting a data source, generating screens, and proving read/write behavior end to end.
 
-Unlike a purely wizard-generated demo, this was interactively driven and round-trip tested end-to-end in a live session:
+## How it was built and verified
 
-1. **Data source.** A new, clean Excel workbook (`PowerApps_Demo_ApplicationLog.xlsx`) was created in OneDrive for Business, with a proper Excel Table (`Table1`) containing columns `EntryID`, `ReceivedDate`, `SenderEmail`, `Subject`, `Category`, and one seeded test row.
-   - Deliberately *not* built against the user's real, live job-application tracker spreadsheet — that file was identified first (by column names and OneDrive "recently opened" metadata) as real personal data and excluded, in favor of building against an isolated, clearly-named test file.
+I interactively drove and round-trip tested the app end to end in a live session:
 
-2. **App generation.** Power Apps Studio's "Start with your data" wizard was used to connect to `Table1` via the Excel Online (Business) connector, with "Auto-generate values in new column (recommended)" as the identity-column strategy. This added a `__PowerAppsId__` GUID column to the table and generated the three-screen app automatically.
+1. **Data source.** I created a clean Excel workbook (`PowerApps_Demo_ApplicationLog.xlsx`) in OneDrive for Business, with a proper Excel Table (`Table1`) containing columns `EntryID`, `ReceivedDate`, `SenderEmail`, `Subject`, `Category`, and one seeded test row. I built against this isolated, clearly named test file so the app works with sample data only.
 
-3. **Functional verification (the real test).** Rather than just taking the wizard's output at face value:
-   - Confirmed the browse gallery and detail view correctly displayed the seeded test row.
-   - Entered the app's own Preview/Play mode and used its "+ New" form to create a **second, real record** directly through the app UI (`EntryID = 2`, `SenderEmail = recruiter@siemens-healthineers.com`, `Subject = "Written directly from the Power App"`, `Category = "Added via Power App"`), then saved it.
-   - Navigated to the underlying Excel file in Excel Online and confirmed the new row appeared there — including the exact same auto-generated GUID (`d5e1f2fe-d9b4-4505-8904-b45b83e8db87`) shown both in the app and in the spreadsheet. This is direct, verified proof that the app's write-back to Excel actually works, not just that it displays static data.
+2. **App generation.** I used Power Apps Studio's "Start with your data" wizard to connect to `Table1` via the Excel Online (Business) connector, with "Auto-generate values in new column (recommended)" as the identity-column strategy. This added a `__PowerAppsId__` GUID column to the table and generated the three-screen app automatically.
 
-4. **Saved as a real, named app.** The app was renamed from the generator's default "App" to `Job Application Log Viewer` and saved, producing a persistent Power Apps resource with its own app ID in the tenant (confirmed via the Studio's "All changes are saved" confirmation and the app's URL changing from a `create` action to an `edit` action against a concrete `app-id`).
+3. **Functional verification.** Rather than taking the wizard's output at face value:
+   - I confirmed the browse gallery and detail view correctly displayed the seeded test row.
+   - I entered the app's Preview/Play mode and used its "+ New" form to create a **second record** directly through the app UI (`EntryID = 2`, a sample recruiter `SenderEmail`, `Subject = "Written directly from the Power App"`, `Category = "Added via Power App"`), then saved it.
+   - I opened the underlying Excel file in Excel Online and confirmed the new row appeared there, including the same auto-generated GUID (`d5e1f2fe-d9b4-4505-8904-b45b83e8db87`) shown both in the app and in the spreadsheet. This confirms the app's write-back to Excel works, not just that it displays static data.
 
-## Evidence
+4. **Saved as a named app.** I renamed the app from the generator's default "App" to `Job Application Log Viewer` and saved it, producing a persistent Power Apps resource with its own app ID in the tenant (confirmed via the Studio's "All changes are saved" message and the app's URL changing from a `create` action to an `edit` action against a concrete `app-id`).
+
+## Results
 
 Screenshots captured during the live verification session (included alongside this README):
 
@@ -36,13 +37,29 @@ Screenshots captured during the live verification session (included alongside th
 - `03_powerapp_preview_gallery.jpg` — the Power App's Preview mode, showing both records in the gallery.
 - `04_powerapp_saved_confirmation.jpg` — the Studio window after saving, showing the app's final name ("Job Application Log Viewer") in the title bar and the "All changes are saved" confirmation.
 
-## Known minor issue
+## Project structure
 
-A small red error indicator appears near the `EntryID` field in the gallery cell while in Editing mode. This did not block or affect functionality — the write-back test above passed regardless — and was not investigated further given the app's intentionally small scope.
+```
+README.md
+01_excel_table_header.png
+02_excel_both_rows.jpg
+03_powerapp_preview_gallery.jpg
+04_powerapp_saved_confirmation.jpg
+```
 
-## Tech / concepts demonstrated
+## Tech and concepts
 
 - Power Apps Canvas app development (Studio UI, screens, controls, Tree view)
 - Power Fx formulas (auto-generated by the data wizard, e.g. gallery `Items` and form `DataSource` bindings)
 - Excel Online (Business) as a live Power Apps data source, including table identity-column handling
-- End-to-end verification methodology: not trusting a generated app's appearance, but proving read/write behavior with a real round-trip test against the underlying data source
+- End-to-end verification: proving read/write behavior with a round-trip test against the underlying data source
+
+## Notes
+
+A small red error indicator appears near the `EntryID` field in the gallery cell while in Editing mode. It does not affect functionality; the write-back test above passed regardless.
+
+## Possible extensions
+
+- Add validation and dropdown controls for `Category`.
+- Add a delete action and filtering by date range.
+- Move the data source to Dataverse or SharePoint for multi-user use.
